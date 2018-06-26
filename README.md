@@ -1,4 +1,4 @@
-# mpv-gif generator
+# mpv-gif-generator *for windows*
 
 ![Example Dino Girl](https://i.imgur.com/ba9VpDe.gif)
 
