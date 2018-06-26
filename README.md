@@ -15,10 +15,10 @@ Place the lua file into the scripts folder in your mpv's directory. (If there is
 
 ## Hotkeys
 
-*q* - Start time
+*g* - Start time
 
-*Q* - End time
+*G* - End time
 
-*CTRL+q* - Export GIF
+*CTRL+g* - Export GIF
 
-*CTRL+Q* - Export GIF with subtitles
+*CTRL+G* - Export GIF with subtitles
