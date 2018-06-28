@@ -12,7 +12,7 @@ local msg = require 'mp.msg'
 filters="fps=15,scale=540:-1:flags=lanczos"
 
 -- Setup output directory
-output_directory="E:/Telepites/MPV/gifs/"
+output_directory="C:/Program Files/mpv/gifs/"
 
 start_time = -1
 end_time = -1
