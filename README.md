@@ -7,10 +7,12 @@ This is a port of his gif generator script for Windows.
 
 # Requirements 
 - Windows
- - mpv
- - ffmpeg
+- mpv
+- ffmpeg
  
 # Installation
+You need to add mpv's (or ffmpeg's) directory to the Windows Path Variable. For help, you can refer to the [comment here](https://github.com/Scheliux/mpv-gif-generator/issues/1#issuecomment-401204625).
+
 Place the lua file into the scripts folder in your mpv's directory. (If there is none, you need to create it.)
 
 ## Hotkeys
