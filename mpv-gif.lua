@@ -108,13 +108,17 @@ function make_gif_internal(burn_subtitles)
         mp.osd_message('No available filenames!')
         return
     end
+    
+    local width = options.rez
+    local ratio = mp.get_property("video-params/aspect")
+    local height = width / ratio
+    local canvas_size = string.format("%sx%s", width, math.floor(height))
 
-    args = string.format('ffmpeg -v warning -ss %s -t %s -i "%s" -i "%s" -lavfi "%s [x]; [x][1:v] paletteuse" -y "%s"', position, duration, esc(pathname), esc(palette), esc(trim_filters), esc(gifname))
+    args = string.format('ffmpeg -v warning -ss %s -canvas_size %s -t %s -i "%s" -i "%s" -lavfi "%s [x]; [x][1:v] paletteuse" -y "%s"', position, canvas_size, duration, esc(pathname), esc(palette), esc(trim_filters), esc(gifname))
     os.execute(args)
 
     msg.info("GIF created.")
     mp.osd_message("GIF created.")
-    os.remove(subs)
 end
 
 function set_gif_start()
