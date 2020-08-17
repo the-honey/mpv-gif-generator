@@ -28,8 +28,6 @@ else
     fps = 15
 end
 
--- Check for max rez
-
 -- Set this to the filters to pass into ffmpeg's -vf option.
 -- filters="fps=24,scale=320:-1:flags=lanczos"
 filters=string.format("fps=%s,scale=%s:-1:flags=lanczos", fps, options.rez)
@@ -40,6 +38,11 @@ output_directory=options.dir
 start_time = -1
 end_time = -1
 palette="%TEMP%palette.png"
+
+-- The roundabout way has to be used due to a some weird
+-- behavior with %TEMP% on the subtitles= parameter in ffmpeg
+-- on Windows–it needs to be quadruple backslashed
+subs = "C:/Users/%USERNAME%/AppData/Local/Temp/subs.srt"
 
 function make_gif_with_subtitles()
     make_gif_internal(true)
@@ -64,15 +67,25 @@ function make_gif_internal(burn_subtitles)
         return string.gsub(s, '"', '"\\""')
     end
 
+    function esc_for_sub(s)
+        s = string.gsub(s, '"', '"\\""')
+        s = string.gsub(s, ":", [[\\:]])
+        return s
+    end
+
     local pathname = mp.get_property("path", "")
     local trim_filters = esc(filters)
-    if burn_subtitles then
-        -- TODO: get current subtitle
-        trim_filters = trim_filters .. string.format(",subtitles=%s", esc(pathname))
-    end
 
     local position = start_time_l
     local duration = end_time_l - start_time_l
+
+    if burn_subtitles then
+        args = string.format('ffmpeg -v warning -ss %s -t %s -i "%s" -y %s', position, duration, esc(pathname), esc(subs))
+        os.execute(args)
+        msg.debug(args)
+        trim_filters = trim_filters .. string.format(",subtitles=%s", esc_for_sub(subs))
+    end
+
 
     -- first, create the palette
     args = string.format('ffmpeg -v warning -ss %s -t %s -i "%s" -vf "%s,palettegen" -y "%s"', position, duration, esc(pathname), esc(trim_filters), esc(palette))
@@ -101,6 +114,7 @@ function make_gif_internal(burn_subtitles)
 
     msg.info("GIF created.")
     mp.osd_message("GIF created.")
+    os.remove(subs)
 end
 
 function set_gif_start()
