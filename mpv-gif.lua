@@ -5,11 +5,37 @@
 -- Requires ffmpeg.
 -- Adapted from http://blog.pkh.me/p/21-high-quality-gif-with-ffmpeg.html
 -- Usage: "g" to set start frame, "G" to set end frame, "Ctrl+g" to create.
+
+require 'mp.options'
 local msg = require 'mp.msg'
+
+local options = {
+    dir = "C:/Program Files/mpv/gifs",
+    rez = 600,
+    fps = 15,
+}
+
+read_options(options, "gif")
+
+
+local fps
+
+-- Check for invalid fps values
+-- Can you believe Lua doesn't have a proper ternary operator in the year of our lord 2020?
+if options.fps ~= nil and options.fps >= 1 and options.fps < 30 then
+    fps = options.fps
+else
+    fps = 15
+end
+
+-- Check for max rez
 
 -- Set this to the filters to pass into ffmpeg's -vf option.
 -- filters="fps=24,scale=320:-1:flags=lanczos"
-filters="fps=15,scale=540:-1:flags=lanczos"
+filters=string.format("fps=%s,scale=%s:-1:flags=lanczos", fps, options.rez)
+
+-- Setup output directory
+output_directory=options.dir
 
 start_time = -1
 end_time = -1
@@ -54,10 +80,8 @@ function make_gif_internal(burn_subtitles)
     os.execute(args)
 
     -- then, make the gif
-    stream_path = mp.get_property("path", "")
-    local working_path = get_containing_path(stream_path)
     local filename = mp.get_property("filename/no-ext")
-    local file_path = working_path .. filename
+    local file_path = output_directory .. filename
 
     -- increment filename
     for i=0,999 do
@@ -92,11 +116,6 @@ end
 function file_exists(name)
     local f=io.open(name,"r")
     if f~=nil then io.close(f) return true else return false end
-end
-
-function get_containing_path(str,sep)
-    sep=sep or package.config:sub(1,1)
-    return str:match("(.*"..sep..")")
 end
 
 mp.add_key_binding("g", "set_gif_start", set_gif_start)
