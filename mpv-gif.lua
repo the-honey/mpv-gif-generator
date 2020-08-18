@@ -50,7 +50,14 @@ end
 
 function make_gif()
     make_gif_internal(false)
+end    
+
+function table_length(t)
+    local count = 0
+    for _ in pairs(t) do count = count + 1 end
+    return count
 end
+
 
 function make_gif_internal(burn_subtitles)
     local start_time_l = start_time
@@ -81,10 +88,43 @@ function make_gif_internal(burn_subtitles)
     local duration = end_time_l - start_time_l
 
     if burn_subtitles then
-        args = string.format('ffmpeg -v warning -ss %s -t %s -i "%s" -y %s', position, duration, esc(pathname), esc(subs))
-        os.execute(args)
-        msg.debug(args)
-        trim_filters = trim_filters .. string.format(",subtitles=%s", esc_for_sub(subs))
+        -- Determine currently active sub track
+
+        local i = 0
+        local tracks_count = mp.get_property_number("track-list/count")
+        local subs_array = {}
+        
+        -- check for subtitle tracks
+
+        while i < tracks_count do
+            local type = mp.get_property(string.format("track-list/%d/type", i))
+            local selected = mp.get_property(string.format("track-list/%d/selected", i))
+
+            -- if it's a sub track, save it
+
+            if type == "sub" then
+                local length = table_length(subs_array)
+                subs_array[length] = selected == "yes"
+            end
+            i = i + 1
+        end
+
+        if table_length(subs_array) > 0 then
+
+            local correct_track = 0
+
+            -- iterate through saved subtitle tracks until the correct one is found
+
+            for index, is_selected in pairs(subs_array) do
+                if (is_selected) then
+                    correct_track = index
+                end
+            end
+
+            trim_filters = trim_filters .. string.format(",subtitles=%s:si=%s", esc_for_sub(pathname), correct_track)
+
+        end
+
     end
 
 
