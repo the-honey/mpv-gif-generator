@@ -12,7 +12,7 @@ This is a port of his gif generator script for Windows.
  
 # Installation
 
-First of all, you must make sure `ffmpeg` is in your %PATH% and accesible via your command line. After ensuring this, clone or download as zip. Then, head to `%APPDATA%/mpv/scripts` and place `mpv-gif.lua` in there; if neither `%APPDATA%/mpv` nor `%APPDATA%/mpv/scripts` exist, you will have to create them. It's as easy as that!
+First of all, you must make sure `ffmpeg` is in your `%PATH%` and accesible via your command line. After ensuring this, clone or download as zip. Then, head to `%APPDATA%/mpv/scripts` and place `mpv-gif.lua` in there; if neither `%APPDATA%/mpv` nor `%APPDATA%/mpv/scripts` exist, you will have to create them. It's as easy as that!
 
 # Configuration
 
@@ -27,4 +27,4 @@ After setup, and if you wish, create a `%APPDATA%/mpv/script-opts` directory if 
 * `g` - Start time
 * `G` - End time
 * `CTRL+g` - Export GIF
-* `CCTRL+G` - Export GIF with subtitles
+* `CTRL+G` - Export GIF with subtitles
