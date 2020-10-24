@@ -75,6 +75,7 @@ function make_gif_internal(burn_subtitles)
     end
 
     function esc_for_sub(s)
+        s = string.gsub(s, [[\]], [[/]])
         s = string.gsub(s, '"', '"\\""')
         s = string.gsub(s, ":", [[\\:]])
         s = string.gsub(s, "'", [[\\']])
