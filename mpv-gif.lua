@@ -29,8 +29,8 @@ else
 end
 
 -- Set this to the filters to pass into ffmpeg's -vf option.
--- filters="fps=24,scale=320:-1:flags=lanczos"
-filters=string.format("fps=%s,scale=%s:-1:flags=lanczos", fps, options.rez)
+-- filters="fps=24,scale=320:-1:flags=spline"
+filters=string.format("fps=%s,scale='trunc(ih*dar/2)*2:trunc(ih/2)*2',setsar=1/1,scale=%s:-1:flags=spline", fps, options.rez) --change spline to lanczos depending on preference
 
 -- Setup output directory
 output_directory=options.dir
